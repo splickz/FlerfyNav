@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="250" fill="url(#bg)" stroke="#334155" stroke-width="4"/>
+
+  <!-- Horizon line -->
+  <line x1="60" y1="300" x2="452" y2="300" stroke="#475569" stroke-width="2" stroke-dasharray="6,4"/>
+
+  <!-- Ocean waves hint -->
+  <path d="M60 310 Q120 300 180 310 Q240 320 300 310 Q360 300 420 310 L452 310" fill="none" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+  <path d="M60 320 Q130 312 200 320 Q270 328 340 320 Q410 312 452 320" fill="none" stroke="#1e40af" stroke-width="1" opacity="0.3"/>
+
+  <!-- Stars -->
+  <g filter="url(#glow)">
+    <!-- Star 1 - Regulus (upper left) -->
+    <polygon points="140,100 145,115 160,115 148,125 152,140 140,130 128,140 132,125 120,115 135,115" fill="#fde68a"/>
+    <!-- Star 2 - Arcturus (upper right) -->
+    <polygon points="370,80 375,95 390,95 378,105 382,120 370,110 358,120 362,105 350,95 365,95" fill="#fde68a"/>
+    <!-- Star 3 - Dubhe (top center) -->
+    <polygon points="256,60 261,75 276,75 264,85 268,100 256,90 244,100 248,85 236,75 251,75" fill="#fde68a"/>
+  </g>
+
+  <!-- Small background stars -->
+  <circle cx="90" cy="140" r="1.5" fill="#94a3b8"/>
+  <circle cx="200" cy="75" r="1" fill="#94a3b8"/>
+  <circle cx="310" cy="95" r="1.5" fill="#94a3b8"/>
+  <circle cx="420" cy="130" r="1" fill="#94a3b8"/>
+  <circle cx="170" cy="55" r="1" fill="#94a3b8"/>
+  <circle cx="400" cy="180" r="1.5" fill="#94a3b8"/>
+
+  <!-- Observer figure -->
+  <circle cx="256" cy="265" r="12" fill="white"/>
+  <line x1="256" y1="277" x2="256" y2="310" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <line x1="256" y1="290" x2="240" y2="280" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="256" y1="290" x2="272" y2="280" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Zenith arrow (Z) -->
+  <line x1="256" y1="250" x2="256" y2="170" stroke="url(#gold)" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="256,165 250,178 262,178" fill="url(#gold)"/>
+  <text x="265" y="172" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#fbbf24">Z</text>
+
+  <!-- Sight lines from observer to stars -->
+  <line x1="256" y1="270" x2="140" y2="100" stroke="#38bdf8" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+  <line x1="256" y1="270" x2="370" y2="80" stroke="#38bdf8" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+  <line x1="256" y1="270" x2="256" y2="60" stroke="#38bdf8" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+
+  <!-- Altitude arc (theta angle) -->
+  <path d="M256 240 A30 30 0 0 0 235 220" fill="none" stroke="#fbbf24" stroke-width="2"/>
+  <text x="225" y="232" font-family="Inter, sans-serif" font-style="italic" font-size="18" fill="#fbbf24">θ</text>
+
+  <!-- Dot product equation -->
+  <text x="256" y="370" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-weight="600" font-size="26" fill="white">
+    <tspan fill="#fbbf24">a</tspan>
+    <tspan fill="white"> · </tspan>
+    <tspan fill="#38bdf8">b</tspan>
+    <tspan fill="white"> = cos </tspan>
+    <tspan fill="#fbbf24">θ</tspan>
+  </text>
+
+  <!-- FlerfyNav text -->
+  <text x="256" y="430" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="52" letter-spacing="-1">
+    <tspan fill="white">Flerfy</tspan><tspan fill="#fbbf24">Nav</tspan>
+  </text>
+
+  <!-- Sextant icon (simplified) -->
+  <g transform="translate(75, 190) scale(0.6)" opacity="0.85">
+    <!-- Arc -->
+    <path d="M20 100 A80 80 0 0 1 140 100" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+    <!-- Arm -->
+    <line x1="80" y1="20" x2="80" y2="110" stroke="url(#gold)" stroke-width="4" stroke-linecap="round"/>
+    <!-- Telescope -->
+    <line x1="80" y1="30" x2="40" y2="10" stroke="url(#gold)" stroke-width="4" stroke-linecap="round"/>
+    <rect x="25" y="3" width="20" height="12" rx="2" fill="url(#gold)" transform="rotate(-25, 35, 9)"/>
+    <!-- Tick marks on arc -->
+    <line x1="30" y1="95" x2="35" y2="85" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="55" y1="105" x2="58" y2="95" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="80" y1="108" x2="80" y2="98" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="105" y1="105" x2="102" y2="95" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="130" y1="95" x2="125" y2="85" stroke="#fbbf24" stroke-width="1.5"/>
+  </g>
+</svg>
