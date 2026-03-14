@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gray-50 text-navy-900 min-h-screen;
+    margin: 0;
+  }
+
+  ::selection {
+    @apply bg-sky-200;
+  }
+}
+
+@layer components {
+  .katex-display {
+    @apply my-4 overflow-x-auto;
+  }
+  .katex {
+    font-size: 1.05em !important;
+  }
+}
