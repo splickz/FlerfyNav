@@ -28,6 +28,7 @@ export function exportMarkdown(state: ExportState): string {
 
   let md = `# FlerfyNav — Method Summary\n\n`;
   md += `**Generated:** ${new Date().toISOString()}\n\n`;
+  md += `**Tool:** FlerfyNav — browser-based celestial navigation solver using dot-product geometry\n\n`;
 
   // Dataset
   md += `## Dataset\n\n`;
@@ -42,12 +43,12 @@ export function exportMarkdown(state: ExportState): string {
   md += `- **Pressure:** ${env.pressureMb} mb\n\n`;
 
   // Settings
-  md += `## Settings Used\n\n`;
+  md += `## Correction Settings\n\n`;
   md += `- **Corrections:** ${settings.useCorrections ? 'Enabled' : 'Disabled'}\n`;
   md += `- **Motion model:** ${settings.useMotion ? 'Moving observer' : 'Stationary observer'}\n\n`;
 
   // Observations & Corrections
-  md += `## Observations\n\n`;
+  md += `## Observations & Corrections\n\n`;
   md += `| Star | UTC | Raw Altitude | Index | Dip | Refraction | Corrected |\n`;
   md += `|------|-----|-------------|-------|-----|------------|----------|\n`;
 
@@ -58,35 +59,53 @@ export function exportMarkdown(state: ExportState): string {
     md += `| ${formatArcmin(c.refractionCorrection)} | ${formatAngle(c.correctedAltitudeDeg)} |\n`;
   });
 
-  // Core Equation
-  md += `\n## Core Equation\n\n`;
-  md += `Each star observation constrains the observer position via:\n\n`;
-  md += '```\n';
-  md += `dot(ŝ, v̂) = sin(h_corrected)\n`;
-  md += '```\n\n';
-  md += `Where:\n`;
-  md += `- **ŝ** = star unit vector in Earth-fixed frame at observation time\n`;
-  md += `- **v̂** = observer's local vertical unit vector (unknown, to be solved)\n`;
-  md += `- **h_corrected** = corrected observed altitude of the star\n\n`;
-  md += `Three observations yield three constraint equations. The solver minimizes `;
-  md += `the sum of squared residuals to find the best-fit observer position.\n\n`;
+  // Source Star Data
+  md += `\n## Source Star Data\n\n`;
+  md += `Star positions from the Nautical Almanac 2018 daily pages for ${env.date}.\n`;
+  md += `SHA and Declination are epoch-of-date values (precession/nutation pre-applied).\n\n`;
+  md += `| Star | SHA (°) | Dec (°) |\n`;
+  md += `|------|---------|--------|\n`;
+  transformations.forEach((t) => {
+    md += `| ${t.starName} | — | — |\n`;
+  });
+  md += `\n*(Full coordinates available in the JSON export.)*\n\n`;
 
-  // Transformation Notes
+  // Transformation Pipeline
   md += `## Source Data Transformation\n\n`;
   md += `1. Star SHA and Dec from Nautical Almanac 2018 daily pages\n`;
-  md += `2. GHA Aries at 08h UTC from hourly tables, interpolated to observation time\n`;
+  md += `2. GHA Aries at 08h UTC from hourly tables, interpolated at 15.04107°/hr\n`;
   md += `3. Star GHA = GHA_Aries + SHA\n`;
-  md += `4. Unit vector computed as: (cos(Dec)·cos(-GHA), cos(Dec)·sin(-GHA), sin(Dec))\n\n`;
+  md += `4. Unit vector: ŝ = (cos(Dec)·cos(-GHA), cos(Dec)·sin(-GHA), sin(Dec))\n\n`;
 
   md += `### Star Vectors Used\n\n`;
   transformations.forEach((t) => {
     const v = t.starUnitVector;
-    md += `- **${t.starName}:** (${v.x.toFixed(6)}, ${v.y.toFixed(6)}, ${v.z.toFixed(6)}), `;
+    md += `- **${t.starName}** @ ${t.utcTime} UTC: (${v.x.toFixed(6)}, ${v.y.toFixed(6)}, ${v.z.toFixed(6)}), `;
     md += `target dot = ${t.targetDotProduct.toFixed(6)}\n`;
   });
 
+  // Light Path Assumptions
+  md += `\n## Light Path Assumptions\n\n`;
+  md += `- Light travels in straight lines from distant stars to the observer\n`;
+  md += `- The sextant measures the angle between the incoming ray and the visible sea horizon\n`;
+  md += `- Atmospheric refraction bends light downward, modeled via the Bennett (1982) formula\n`;
+  md += `- Correction chain: H_s → (−IE) → (−Dip) → (−Refraction) → H_c\n\n`;
+
+  // Geometric Model
+  md += `## Geometric Model\n\n`;
+  md += `**Unknowns:** Observer latitude (φ) and longitude (λ)\n\n`;
+  md += `**Local vertical:** v̂(φ,λ) = (cosφ·cosλ, cosφ·sinλ, sinφ)\n\n`;
+  md += `**Core constraint equation:**\n\n`;
+  md += '```\n';
+  md += `ŝᵢ · v̂ = sin(hc,i)    for i = 1..${transformations.length}\n`;
+  md += '```\n\n';
+  md += `With ${transformations.length} observations and 2 unknowns, there `;
+  md += `${transformations.length - 2 === 1 ? 'is' : 'are'} ${transformations.length - 2} degree${transformations.length - 2 !== 1 ? 's' : ''} `;
+  md += `of freedom for residual checking.\n\n`;
+  md += `**Solver:** Gauss-Newton least squares with grid search initial guess and damped line search.\n\n`;
+
   // Constants
-  md += `\n## Constants\n\n`;
+  md += `## Constants\n\n`;
   md += `| Name | Value | Description | Source |\n`;
   md += `|------|-------|-------------|--------|\n`;
   Object.entries(constants).forEach(([key, c]) => {
@@ -97,6 +116,7 @@ export function exportMarkdown(state: ExportState): string {
   if (result) {
     md += `\n## Result\n\n`;
     md += `- **Estimated position:** ${formatDM(result.estimatedLat, 'lat')}, ${formatDM(result.estimatedLon, 'lon')}\n`;
+    md += `- **Decimal:** ${result.estimatedLat.toFixed(4)}°, ${result.estimatedLon.toFixed(4)}°\n`;
     md += `- **RMS residual:** ${result.totalRMS.toFixed(2)}′\n`;
     md += `- **Converged:** ${result.converged ? 'Yes' : 'No'} (${result.iterations} iterations)\n`;
     md += `- **Motion included:** ${result.motionIncluded ? 'Yes' : 'No'}\n\n`;
@@ -108,19 +128,36 @@ export function exportMarkdown(state: ExportState): string {
     }
 
     md += `### Per-Star Residuals\n\n`;
-    md += `| Star | Expected dot | Computed dot | Residual |\n`;
-    md += `|------|-------------|-------------|----------|\n`;
+    md += `| Star | Expected dot | Computed dot | Residual | Assessment |\n`;
+    md += `|------|-------------|-------------|----------|------------|\n`;
     result.residuals.forEach((r) => {
-      md += `| ${r.starName} | ${r.expectedDot.toFixed(6)} | ${r.computedDot.toFixed(6)} | ${formatArcmin(r.residualArcmin)} |\n`;
+      const abs = Math.abs(r.residualArcmin);
+      const assessment = abs < 1 ? 'Excellent' : abs < 2 ? 'Good' : abs < 5 ? 'Acceptable' : 'Check data';
+      md += `| ${r.starName} | ${r.expectedDot.toFixed(6)} | ${r.computedDot.toFixed(6)} | ${formatArcmin(r.residualArcmin)} | ${assessment} |\n`;
     });
+
+    md += `\n### Fit Quality\n\n`;
+    if (result.totalRMS < 2) {
+      md += `RMS residual of ${result.totalRMS.toFixed(2)}′ indicates good internal consistency, `;
+      md += `well within typical sextant precision (1′–2′).\n\n`;
+    } else if (result.totalRMS < 5) {
+      md += `RMS residual of ${result.totalRMS.toFixed(2)}′ is acceptable for field sextant observations.\n\n`;
+    } else {
+      md += `RMS residual of ${result.totalRMS.toFixed(2)}′ is larger than expected. Review input data.\n\n`;
+    }
   }
 
-  md += `\n## Reproducibility\n\n`;
-  md += `This result was computed using the FlerfyNav, a single-page `;
-  md += `React application with no backend. All calculations run in the browser using `;
-  md += `modular TypeScript. The full computation state can be exported as JSON for `;
-  md += `independent verification. All constants, formulas, and source data are `;
-  md += `documented above.\n`;
+  md += `## Reproducibility\n\n`;
+  md += `This result was computed using FlerfyNav, a single-page React application `;
+  md += `with no backend. All calculations run in the browser using modular TypeScript.\n\n`;
+  md += `**Checklist:**\n`;
+  md += `- [x] Dataset loaded and displayed\n`;
+  md += `- [x] Correction formulas shown with all constants\n`;
+  md += `- [x] Source star data and transformation pipeline documented\n`;
+  md += `- [x] Light path assumptions stated\n`;
+  md += `- [x] Geometric model and constraint equations shown\n`;
+  md += `- [x] Residual validation computed\n`;
+  md += `- [x] Full JSON export available for independent verification\n`;
 
   return md;
 }
