@@ -2,6 +2,7 @@ import { ExportState } from '../../types';
 import { CONSTANTS } from '../../domain/math/constants';
 import { formatDM, formatAngle } from '../../domain/math/angles';
 import { formatArcmin } from '../../domain/formatting';
+import { STAR_CATALOG } from '../../domain/transformations';
 
 export function buildExportState(store: {
   dataset: ExportState['dataset'];
@@ -63,12 +64,17 @@ export function exportMarkdown(state: ExportState): string {
   md += `\n## Source Star Data\n\n`;
   md += `Star positions from the Nautical Almanac 2018 daily pages for ${env.date}.\n`;
   md += `SHA and Declination are epoch-of-date values (precession/nutation pre-applied).\n\n`;
-  md += `| Star | SHA (°) | Dec (°) |\n`;
-  md += `|------|---------|--------|\n`;
+  md += `| Star | SHA (°) | Dec (°) | RA (°) |\n`;
+  md += `|------|---------|--------|--------|\n`;
   transformations.forEach((t) => {
-    md += `| ${t.starName} | — | — |\n`;
+    const cat = STAR_CATALOG[t.starName];
+    if (cat) {
+      const sha = 360 - cat.ra;
+      md += `| ${t.starName} | ${sha.toFixed(4)} | ${cat.dec.toFixed(4)} | ${cat.ra.toFixed(4)} |\n`;
+    } else {
+      md += `| ${t.starName} | — | — | — |\n`;
+    }
   });
-  md += `\n*(Full coordinates available in the JSON export.)*\n\n`;
 
   // Transformation Pipeline
   md += `## Source Data Transformation\n\n`;
