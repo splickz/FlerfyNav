@@ -25,7 +25,7 @@ export function ExportPanel() {
 
   const handleDownloadJSON = () => {
     const json = exportJSON(state);
-    downloadJSON(json, `celnav-export-${Date.now()}.json`);
+    downloadJSON(json, `flerfynav-export-${Date.now()}.json`);
     setCopied('json');
     setTimeout(() => setCopied(null), 2000);
   };
@@ -36,8 +36,8 @@ export function ExportPanel() {
         Method Summary &amp; Export
       </h3>
       <p className="text-sm text-gray-500 mb-4">
-        Export a submission-ready summary of the dataset, method, corrections, equations,
-        transformations, constants, and results.
+        Export a reproducible method summary covering the dataset, corrections, source data,
+        transformation pipeline, geometric formulation, constants, and results.
       </p>
       <div className="flex gap-3">
         <button

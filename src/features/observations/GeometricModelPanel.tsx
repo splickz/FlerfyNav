@@ -15,8 +15,10 @@ export function GeometricModelPanel() {
         <div>
           <p className="font-medium text-navy-700 mb-2">Unknowns</p>
           <p className="text-xs text-gray-500">
-            The two unknowns are the observer&apos;s <strong>latitude</strong> (&phi;) and <strong>longitude</strong> (&lambda;).
-            These define the observer&apos;s local vertical unit vector:
+            The unknown quantity solved for is the observer&apos;s position, parameterized
+            as <strong>latitude</strong> (&phi;) and <strong>longitude</strong> (&lambda;).
+            These two parameters define the observer&apos;s local vertical unit vector, which
+            is the geometric quantity the solver iterates on:
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mt-2 text-center">
             <KatexBlock
@@ -28,8 +30,11 @@ export function GeometricModelPanel() {
         <div>
           <p className="font-medium text-navy-700 mb-2">Constraint Equation</p>
           <p className="text-xs text-gray-500 mb-2">
-            Each star observation creates one scalar constraint. The dot product of the star&apos;s
-            unit vector with the observer&apos;s local vertical equals the sine of the corrected altitude:
+            Each star observation contributes one scalar constraint equation. The dot product
+            of the star&apos;s direction vector with the observer&apos;s local vertical equals
+            the sine of the corrected altitude. With {n} stars this gives {n} constraints
+            for 2 unknown position parameters, plus {n - 2} residual consistency
+            check{n - 2 !== 1 ? 's' : ''}:
           </p>
           <div className="bg-gray-50 rounded-lg p-4 text-center">
             <KatexBlock

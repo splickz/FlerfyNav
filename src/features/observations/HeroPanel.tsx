@@ -17,12 +17,14 @@ export function HeroPanel() {
           general-purpose linear algebra, not exclusive to any particular geometric model.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed mb-6">
-          This app demonstrates that relationship interactively, supports the{' '}
+          This app demonstrates that relationship interactively as a submission-oriented tool
+          for the{' '}
           <a href="https://mctoon.net/10ksextantv2/" target="_blank" rel="noopener noreferrer"
             className="text-sky-600 hover:underline">
             MCToon $10K Sextant Challenge v2
-          </a>{' '}
-          submission, and makes every calculation transparent and reproducible.
+          </a>
+          . Every calculation is shown transparently with a reproducible method summary available
+          for export.
         </p>
 
         <div className="flex items-center gap-4">

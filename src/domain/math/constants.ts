@@ -1,14 +1,4 @@
 export const CONSTANTS = {
-  EARTH_RADIUS_NM: {
-    value: 3440.065,
-    description: 'Mean radius of Earth in nautical miles',
-    source: 'WGS-84 mean radius 6371.0088 km / 1.852 km per NM',
-  },
-  EARTH_RADIUS_KM: {
-    value: 6371.0088,
-    description: 'WGS-84 mean radius of Earth in kilometers',
-    source: 'WGS-84 standard',
-  },
   DEG_TO_RAD: {
     value: Math.PI / 180,
     description: 'Conversion factor from degrees to radians',

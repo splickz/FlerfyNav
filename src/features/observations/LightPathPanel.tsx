@@ -82,7 +82,7 @@ export function LightPathPanel() {
         </div>
 
         <div>
-          <p className="font-medium text-navy-700 mb-2">All Constants Used</p>
+          <p className="font-medium text-navy-700 mb-2">Constants Used in Correction Formulas</p>
           <div className="bg-gray-50 rounded-lg overflow-hidden">
             <table className="w-full text-xs">
               <thead>

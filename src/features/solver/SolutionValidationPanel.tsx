@@ -13,13 +13,13 @@ export function SolutionValidationPanel() {
 
   let fitInterpretation: string;
   if (result.totalRMS < 1) {
-    fitInterpretation = 'Excellent internal consistency. Residuals are well within typical sextant precision (~1\u20322\u2032).';
+    fitInterpretation = 'This solution shows internal consistency at the sub-arcminute level.';
   } else if (result.totalRMS < 2) {
-    fitInterpretation = 'Good fit. Residuals are consistent with careful sextant observations (typical error ~1\u20322\u2032).';
+    fitInterpretation = 'This solution shows internal consistency at the arcminute level.';
   } else if (result.totalRMS < 5) {
-    fitInterpretation = 'Acceptable fit. Residuals are within the range expected for practiced sextant use under field conditions.';
+    fitInterpretation = 'Residuals of a few arcminutes are consistent with normal sextant-style observational uncertainty under field conditions.';
   } else {
-    fitInterpretation = 'Residuals are larger than expected. This may indicate data entry error, incorrect star identification, or poor observing conditions.';
+    fitInterpretation = 'Residuals are larger than typical. This may indicate data entry error, incorrect star identification, or poor observing conditions.';
   }
 
   return (
@@ -81,8 +81,8 @@ export function SolutionValidationPanel() {
 
         <p className="text-xs text-gray-400">
           Sextant observations typically carry errors of 0.5&prime;&ndash;3&prime; due to horizon clarity,
-          instrument precision, and observer skill. Residuals in this range indicate the observations are
-          internally consistent with the geometric model.
+          instrument precision, and observer skill. Residuals in this range are consistent with
+          the observations being geometrically coherent under the model used.
         </p>
       </div>
     </CollapsibleSection>
